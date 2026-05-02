@@ -1,18 +1,37 @@
 package com.example.combineddemo.home;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ModelUser {
     String userName,email, password, biography;
 
-    int userId;
+    static int userId = 0;
     int rank, profilePhoto;
+
+    private FirebaseAuth auth;
+    private FirebaseStorage firebaseStorage;
+
+    private FirebaseFirestore firebaseFirestore;
+
+    private StorageReference storageReference;
     ArrayList<ModelUser> friendList;
     ArrayList<ModelPost> sharedPosts;
     boolean isAdvistor;
 
-    public ModelUser(int userId, String userName, String email, String password, String biography, int profilePhoto) {
-        this.userId = userId;
+    public ModelUser(String userName, String email, String password, String biography, int profilePhoto) {
+        userId++;
         this.userName = userName;
         this.email = email;
         this.password = password;
@@ -22,7 +41,42 @@ public class ModelUser {
         this.friendList = new ArrayList<>();
         this.sharedPosts = new ArrayList<>();
         this.isAdvistor = false;
+
+        firebaseStorage = FirebaseStorage.getInstance();
+        auth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = firebaseStorage.getReference();
+
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        if (firebaseUser != null) {
+
+                HashMap<String, Object> postData = new HashMap<>();
+                postData.put("id", userId);
+                postData.put("username", userName);
+                postData.put("useremail", email);
+                postData.put("password", password);
+                postData.put("profilePhotoUrl", profilePhoto);
+                postData.put("biography", biography);
+                postData.put("posts", null);
+
+                firebaseFirestore.collection("users").add(postData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        System.out.println("Succes");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("Fail");
+                    }
+                });
+
+        }
+        else {
+
+        }
     }
+
 
     public int getUserId() {
         return userId;

@@ -1,16 +1,15 @@
 package com.example.combineddemo;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
-
-import com.example.combineddemo.databinding.ActivityMainBinding;
 import com.example.combineddemo.databinding.ActivityMainPageBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,6 +27,7 @@ public class MainPage extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         frameLayout = findViewById(R.id.frame_layout);
+        replaceFragment(new HomeFragment(), false);
 
 
 
@@ -38,7 +38,7 @@ public class MainPage extends AppCompatActivity {
                 int itemID = item.getItemId();
 
                 if(itemID == R.id.home) {
-                    replaceFragment(new HomeFragment(), false);
+                    replaceFragment(new HomeFragment(), true);
                 } else if (itemID == R.id.add) {
                     replaceFragment(new AddPhotoFragment(), false);
                 } else if(itemID == R.id.profile) {
@@ -49,6 +49,8 @@ public class MainPage extends AppCompatActivity {
 
                 return true;
             }
+
+
         });
 
 

@@ -14,10 +14,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private FirebaseStorage firebaseStorage;
+
+    private FirebaseFirestore firebaseFirestore;
 
     private ActivityMainBinding binding;
 
@@ -49,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
-                    ModelUser newUser = new ModelUser(numberOfUser, username, email, password, "", 0 );
-                    numberOfUser++;
+                    ModelUser newUser = new ModelUser(username, email, password, "", 0 );
                     Intent intent = new Intent(MainActivity.this, MainPage.class);
                     startActivity(intent);
                     finish();
